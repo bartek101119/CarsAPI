@@ -15,6 +15,8 @@ namespace CarsAPI.Entities
         public string Cost { get; set; }
         public bool IsFullyDamaged { get; set; }
         public int Year { get; set; }
+        public int CarCompanyId { get; set; }
+        public virtual CarCompany CarCompany { get; set; }
 
     }
 }
