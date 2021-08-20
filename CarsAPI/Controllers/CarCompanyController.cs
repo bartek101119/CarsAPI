@@ -59,5 +59,16 @@ namespace CarsAPI.Controllers
             return NotFound();
         }
 
+        [HttpPut("{id}")]
+        public ActionResult Put([FromBody] CreateCarCompanyDto dto, [FromRoute]int id)
+        {
+            var updated = service.Update(dto, id);
+
+            if (!updated)
+                return NotFound();
+
+            return NoContent();
+        }
+
     }
 }
