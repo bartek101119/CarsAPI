@@ -15,6 +15,7 @@ namespace CarsAPI.Services
         IEnumerable<CarCompanyDto> GetCompanies();
         CarCompanyDto GetCompany(int id);
         int NewCompany(CreateCarCompanyDto dto);
+        bool Update(CreateCarCompanyDto dto, int id);
     }
     public class CarCompanyService : ICarCompanyService
     {
@@ -72,6 +73,22 @@ namespace CarsAPI.Services
             return true;
         }
 
+        public bool Update(CreateCarCompanyDto dto, int id)
+        {
+            var updated = context.CarCompanies.FirstOrDefault(c => c.Id == id);
+
+            if (updated is null)
+                return false;
+
+            updated.LegalForm = dto.LegalForm;
+            updated.Name = dto.Name;
+            updated.REGON = dto.REGON;
+            updated.DateOfCommencementOfActivity = dto.DateOfCommencementOfActivity;
+
+            context.SaveChanges();
+
+            return true;
+        }
 
     }
 }
