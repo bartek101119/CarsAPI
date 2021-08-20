@@ -36,6 +36,7 @@ namespace CarsAPI
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddDbContext<CarDbContext>();
             services.AddScoped<ICarService, CarService>();
+            services.AddScoped<ICarCompanyService, CarCompanyService>();
             services.AddCors(options => 
             {
                 options.AddPolicy("FrontEndClient", builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
