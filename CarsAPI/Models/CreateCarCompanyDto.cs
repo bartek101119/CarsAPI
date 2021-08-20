@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace CarsAPI.Models
 {
-    public class CarCompanyDto
+    public class CreateCarCompanyDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string LegalForm { get; set; }
         public string REGON { get; set; }
         public string NIP { get; set; }
         public DateTime DateOfCommencementOfActivity { get; set; }
-        public List<CarDto> Cars { get; set; }
     }
 }

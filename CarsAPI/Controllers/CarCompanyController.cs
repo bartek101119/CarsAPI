@@ -40,5 +40,24 @@ namespace CarsAPI.Controllers
             return Ok(companies);
         }
 
+        [HttpPost]
+        public ActionResult Post([FromBody] CreateCarCompanyDto dto)
+        {
+            var companyId = service.NewCompany(dto);
+
+            return Created($"/api/carCompany/{companyId}", null);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute]int id)
+        {
+            var deleted = service.DeletedCompany(id);
+
+            if (deleted)
+                return NoContent();
+
+            return NotFound();
+        }
+
     }
 }
