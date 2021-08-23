@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarsAPI.Entities;
 using CarsAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace CarsAPI.Services
 {
     public interface ICarService
     {
-        public int Create(CreateCarDto dto);
+        public int? Create(CreateCarDto dto, int carCompanyId);
         bool DeleteCar(int id);
-        public IEnumerable<CarDto> GetAll();
+        IEnumerable<CarDto> GetAll(int carCompanyId);
         CarDto GetOne(int id);
         bool Update(UpdateCarDto dto, int id);
     }
@@ -26,9 +27,16 @@ namespace CarsAPI.Services
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
-        public int Create(CreateCarDto dto)
+        public int? Create(CreateCarDto dto, int carCompanyId)
         {
+            var carCompany = dbContext.CarCompanies.FirstOrDefault(c => c.Id == carCompanyId);
+
+            if (carCompany is null)
+                return null;
+
             var car = mapper.Map<Car>(dto);
+
+            car.CarCompanyId = carCompanyId;
 
             dbContext.Cars.Add(car);
             dbContext.SaveChanges();
@@ -36,10 +44,15 @@ namespace CarsAPI.Services
             return car.Id;
         }
 
-        public IEnumerable<CarDto> GetAll()
+        public IEnumerable<CarDto> GetAll(int carCompanyId)
         {
-            var allCars = dbContext.Cars.ToList();
-            var allCarsDtos = mapper.Map<List<CarDto>>(allCars);
+            var carCompany = dbContext.CarCompanies.Include(c => c.Cars).FirstOrDefault(c => c.Id == carCompanyId);
+
+            if (carCompany is null)
+                return null;
+
+
+            var allCarsDtos = mapper.Map<List<CarDto>>(carCompany.Cars);
 
             return allCarsDtos;
         }
