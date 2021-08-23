@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CarsAPI.Controllers
 {
-    [Route("/api/cars")]
+    [Route("/api/carCompany/{carCompanyId}/cars")]
     [ApiController]
     public class CarController : ControllerBase
     {
@@ -19,16 +19,17 @@ namespace CarsAPI.Controllers
             this.service = service;
         }
         [HttpPost]
-        public ActionResult Post([FromBody] CreateCarDto dto)
+        public ActionResult Post([FromBody] CreateCarDto dto, [FromRoute]int carCompanyId)
         {
-            var carId = service.Create(dto);
+            var carId = service.Create(dto, carCompanyId);
 
-            return Created($"/api/cars/{carId}", null);
+            return Created($"/api/{carCompanyId}/cars/{carId}", null);
         }
 
-        public ActionResult<IEnumerable<CarDto>> GetAll()
+        [HttpGet]
+        public ActionResult<IEnumerable<CarDto>> GetAll([FromRoute]int carCompanyId)
         {
-            var allCarsDtos = service.GetAll();
+            var allCarsDtos = service.GetAll(carCompanyId);
 
             return Ok(allCarsDtos);
         }
