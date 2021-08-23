@@ -16,6 +16,7 @@ namespace CarsAPI
             CreateMap<CreateCarDto, Car>();
 
             CreateMap<CarCompany, CarCompanyDto>();
+            CreateMap<CreateCarCompanyDto, CarCompany>();
         }
     }
 }

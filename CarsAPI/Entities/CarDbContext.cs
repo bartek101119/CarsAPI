@@ -10,7 +10,7 @@ namespace CarsAPI.Entities
     {
         private string connectionString = "Server=(localdb)\\mssqllocaldb;Database=CarsDb;Trusted_Connection=True;";
         public DbSet<Car> Cars { get; set; }
-        public DbSet<CarCompany> CarCompanies { get; set; }
+        public DbSet<CarCompany> CarCompany { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
