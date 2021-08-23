@@ -11,11 +11,15 @@ namespace CarsAPI.Entities
         private string connectionString = "Server=(localdb)\\mssqllocaldb;Database=CarsDb;Trusted_Connection=True;";
         public DbSet<Car> Cars { get; set; }
         public DbSet<CarCompany> CarCompany { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Car>();
             modelBuilder.Entity<CarCompany>();
+            modelBuilder.Entity<User>().Property(x => x.Email).IsRequired();
+            modelBuilder.Entity<Role>().Property(x => x.Name).IsRequired();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

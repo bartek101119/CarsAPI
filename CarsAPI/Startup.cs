@@ -42,11 +42,13 @@ namespace CarsAPI
                 options.AddPolicy("FrontEndClient", builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             } );
             services.AddScoped<IValidator<CreateCarDto>, CreateCarDtoValidator>();
+            services.AddScoped<CarCompanySeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CarCompanySeeder seeder)
         {
+            seeder.Seed();
             app.UseCors("FrontEndClient");
             if (env.IsDevelopment())
             {
