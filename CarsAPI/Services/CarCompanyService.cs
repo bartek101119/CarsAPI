@@ -29,7 +29,7 @@ namespace CarsAPI.Services
         }
         public CarCompanyDto GetCompany(int id)
         {
-            var company = context.CarCompanies.Include(d => d.Cars).FirstOrDefault(c => c.Id == id);
+            var company = context.CarCompany.Include(d => d.Cars).FirstOrDefault(c => c.Id == id);
 
             if (company is null)
                 return null;
@@ -42,7 +42,7 @@ namespace CarsAPI.Services
 
         public IEnumerable<CarCompanyDto> GetCompanies()
         {
-            var companies = context.CarCompanies.Include(d => d.Cars).ToList();
+            var companies = context.CarCompany.Include(d => d.Cars).ToList();
 
             var companiesDtos = mapper.Map<List<CarCompanyDto>>(companies);
 
@@ -53,7 +53,7 @@ namespace CarsAPI.Services
         {
             var company = mapper.Map<CarCompany>(dto);
 
-            context.CarCompanies.Add(company);
+            context.CarCompany.Add(company);
             context.SaveChanges();
 
             return company.Id;
@@ -62,12 +62,12 @@ namespace CarsAPI.Services
 
         public bool DeletedCompany(int id)
         {
-            var deleted = context.CarCompanies.FirstOrDefault(c => c.Id == id);
+            var deleted = context.CarCompany.FirstOrDefault(c => c.Id == id);
 
             if (deleted is null)
                 return false;
 
-            context.CarCompanies.RemoveRange(deleted);
+            context.CarCompany.RemoveRange(deleted);
             context.SaveChanges();
 
             return true;
@@ -75,7 +75,7 @@ namespace CarsAPI.Services
 
         public bool Update(CreateCarCompanyDto dto, int id)
         {
-            var updated = context.CarCompanies.FirstOrDefault(c => c.Id == id);
+            var updated = context.CarCompany.FirstOrDefault(c => c.Id == id);
 
             if (updated is null)
                 return false;

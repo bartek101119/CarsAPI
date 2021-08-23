@@ -29,7 +29,7 @@ namespace CarsAPI.Services
         }
         public int? Create(CreateCarDto dto, int carCompanyId)
         {
-            var carCompany = dbContext.CarCompanies.FirstOrDefault(c => c.Id == carCompanyId);
+            var carCompany = dbContext.CarCompany.FirstOrDefault(c => c.Id == carCompanyId);
 
             if (carCompany is null)
                 return null;
@@ -46,7 +46,7 @@ namespace CarsAPI.Services
 
         public IEnumerable<CarDto> GetAll(int carCompanyId)
         {
-            var carCompany = dbContext.CarCompanies.Include(c => c.Cars).FirstOrDefault(c => c.Id == carCompanyId);
+            var carCompany = dbContext.CarCompany.Include(c => c.Cars).FirstOrDefault(c => c.Id == carCompanyId);
 
             if (carCompany is null)
                 return null;
