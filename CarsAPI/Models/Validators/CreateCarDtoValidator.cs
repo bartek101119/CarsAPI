@@ -10,8 +10,16 @@ namespace CarsAPI.Models.Validators
     {
         public CreateCarDtoValidator()
         {
-            RuleFor(x => x.Model)
+            RuleFor(x => x.Year)
                 .NotEmpty();
+            RuleFor(x => x.Model)
+                 .NotEmpty();
+            RuleFor(x => x.ClientFirstName)
+                 .NotEmpty();
+            RuleFor(x => x.Surname)
+                 .NotEmpty();
+            RuleFor(x => x.Cost)
+                 .NotEmpty();
 
             RuleFor(x => x.Cost)
                 .Matches("^[0-9]*$");
