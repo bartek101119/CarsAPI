@@ -7,6 +7,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,9 @@ namespace CarsAPI
             } );
             services.AddScoped<IValidator<CreateCarDto>, CreateCarDtoValidator>();
             services.AddScoped<CarCompanySeeder>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
