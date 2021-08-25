@@ -26,5 +26,13 @@ namespace CarsAPI.Controllers
             return Ok();
 
         }
+
+        [HttpPost("login")]
+        public ActionResult Login([FromBody]LoginDto dto)
+        {
+            var token = service.GenerateJwt(dto);
+
+            return Ok(token);
+        }
     }
 }
