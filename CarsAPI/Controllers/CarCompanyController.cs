@@ -1,6 +1,7 @@
 ﻿using CarsAPI.Entities;
 using CarsAPI.Models;
 using CarsAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace CarsAPI.Controllers
 {
     [Route("/api/carCompany")]
     [ApiController]
+    [Authorize]
     public class CarCompanyController : ControllerBase
     {
         private readonly ICarCompanyService service;
@@ -49,6 +51,7 @@ namespace CarsAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Mod")]
         public ActionResult Delete([FromRoute]int id)
         {
             var deleted = service.DeletedCompany(id);
