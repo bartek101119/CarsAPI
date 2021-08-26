@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CarsAPI.Controllers
@@ -45,7 +46,8 @@ namespace CarsAPI.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] CreateCarCompanyDto dto)
         {
-            var companyId = service.NewCompany(dto);
+            var userId = int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            var companyId = service.NewCompany(dto, userId);
 
             return Created($"/api/carCompany/{companyId}", null);
         }
@@ -54,7 +56,7 @@ namespace CarsAPI.Controllers
         [Authorize(Roles = "Admin, Mod")]
         public ActionResult Delete([FromRoute]int id)
         {
-            var deleted = service.DeletedCompany(id);
+            var deleted = service.DeletedCompany(id, User);
 
             if (deleted)
                 return NoContent();
@@ -65,7 +67,7 @@ namespace CarsAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult Put([FromBody] CreateCarCompanyDto dto, [FromRoute]int id)
         {
-            var updated = service.Update(dto, id);
+            var updated = service.Update(dto, id, User);
 
             if (!updated)
                 return NotFound();

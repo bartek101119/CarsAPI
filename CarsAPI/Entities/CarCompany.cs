@@ -9,6 +9,8 @@ namespace CarsAPI.Entities
     public class CarCompany
     {
         public int Id { get; set; }
+        public int? CreateById { get; set; }
+        public virtual User CreatedBy { get; set; }
         public string Name { get; set; }
         public string LegalForm { get; set; }
         public string REGON { get; set; }

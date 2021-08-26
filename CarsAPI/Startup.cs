@@ -1,3 +1,4 @@
+using CarsAPI.Authorization;
 using CarsAPI.Entities;
 using CarsAPI.Middleware;
 using CarsAPI.Models;
@@ -5,6 +6,7 @@ using CarsAPI.Models.Validators;
 using CarsAPI.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -76,6 +78,7 @@ namespace CarsAPI
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
