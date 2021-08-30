@@ -57,6 +57,7 @@ namespace CarsAPI.Services
             var companies = baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
                 .Take(query.PageSize)
+                .OrderBy(x => x.Name)
                 .ToList();
 
             var totalItemsCount = baseQuery.Count();
