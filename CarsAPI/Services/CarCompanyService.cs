@@ -16,7 +16,7 @@ namespace CarsAPI.Services
     public interface ICarCompanyService
     {
         bool DeletedCompany(int id);
-        IEnumerable<CarCompanyDto> GetCompanies();
+        PagedResult<CarCompanyDto> GetCompanies(SearchQuery query);
         CarCompanyDto GetCompany(int id);
         int NewCompany(CreateCarCompanyDto dto);
         bool Update(CreateCarCompanyDto dto, int id);
@@ -48,13 +48,24 @@ namespace CarsAPI.Services
 
         }
 
-        public IEnumerable<CarCompanyDto> GetCompanies()
+        public PagedResult<CarCompanyDto> GetCompanies(SearchQuery query)
         {
-            var companies = context.CarCompany.Include(d => d.Cars).ToList();
+            var baseQuery = context.CarCompany.Include(d => d.Cars)
+                .Where(q => query.SearchPhrase == null ||  q.Name.ToLower().Contains(query.SearchPhrase.ToLower()));
+                
+
+            var companies = baseQuery
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .ToList();
+
+            var totalItemsCount = baseQuery.Count();
 
             var companiesDtos = mapper.Map<List<CarCompanyDto>>(companies);
 
-            return companiesDtos;
+            var result = new PagedResult<CarCompanyDto>(companiesDtos, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public int NewCompany(CreateCarCompanyDto dto)

@@ -87,6 +87,7 @@ namespace CarsAPI
             {
                 options.AddPolicy("MinimumTwoCars", builder => builder.AddRequirements(new MinimumTwoCarsRequirement(2)));
             });
+            services.AddScoped<IValidator<SearchQuery>, SearchQueryValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

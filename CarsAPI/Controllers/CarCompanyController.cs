@@ -36,9 +36,9 @@ namespace CarsAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CarCompany>> GetAll()
+        public ActionResult<IEnumerable<CarCompany>> GetAll([FromQuery]SearchQuery query)
         {
-            var companies = service.GetCompanies();
+            var companies = service.GetCompanies(query);
 
             return Ok(companies);
         }
