@@ -8,6 +8,8 @@ namespace CarsAPI.Entities
     public class Car
     {
         public int Id { get; set; }
+        public int? CreateById { get; set; }
+        public virtual User CreatedBy { get; set; }
         public string Model { get; set; }
         public string Color { get; set; }
         public string ClientFirstName { get; set; }

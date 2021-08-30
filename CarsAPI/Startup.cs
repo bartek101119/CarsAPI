@@ -9,6 +9,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,6 +80,13 @@ namespace CarsAPI
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+            services.AddScoped<IUserContextService, UserContextService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IAuthorizationHandler, MinimumTwoCarsRequirementHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MinimumTwoCars", builder => builder.AddRequirements(new MinimumTwoCarsRequirement(2)));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

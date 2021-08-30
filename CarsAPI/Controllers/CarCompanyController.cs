@@ -46,8 +46,8 @@ namespace CarsAPI.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] CreateCarCompanyDto dto)
         {
-            var userId = int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            var companyId = service.NewCompany(dto, userId);
+            
+            var companyId = service.NewCompany(dto);
 
             return Created($"/api/carCompany/{companyId}", null);
         }
@@ -56,7 +56,7 @@ namespace CarsAPI.Controllers
         [Authorize(Roles = "Admin, Mod")]
         public ActionResult Delete([FromRoute]int id)
         {
-            var deleted = service.DeletedCompany(id, User);
+            var deleted = service.DeletedCompany(id);
 
             if (deleted)
                 return NoContent();
@@ -67,7 +67,7 @@ namespace CarsAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult Put([FromBody] CreateCarCompanyDto dto, [FromRoute]int id)
         {
-            var updated = service.Update(dto, id, User);
+            var updated = service.Update(dto, id);
 
             if (!updated)
                 return NotFound();

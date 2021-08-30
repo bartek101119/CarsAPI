@@ -29,6 +29,7 @@ namespace CarsAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "MinimumTwoCars")]
         public ActionResult<IEnumerable<CarDto>> GetAll([FromRoute]int carCompanyId)
         {
             var allCarsDtos = service.GetAll(carCompanyId);

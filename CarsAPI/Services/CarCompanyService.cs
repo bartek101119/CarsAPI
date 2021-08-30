@@ -15,23 +15,25 @@ namespace CarsAPI.Services
 {
     public interface ICarCompanyService
     {
-        bool DeletedCompany(int id, ClaimsPrincipal user);
+        bool DeletedCompany(int id);
         IEnumerable<CarCompanyDto> GetCompanies();
         CarCompanyDto GetCompany(int id);
-        int NewCompany(CreateCarCompanyDto dto, int userId);
-        bool Update(CreateCarCompanyDto dto, int id, ClaimsPrincipal user);
+        int NewCompany(CreateCarCompanyDto dto);
+        bool Update(CreateCarCompanyDto dto, int id);
     }
     public class CarCompanyService : ICarCompanyService
     {
         private readonly CarDbContext context;
         private readonly IMapper mapper;
         private readonly IAuthorizationService authorizationService;
+        private readonly IUserContextService userContextService;
 
-        public CarCompanyService(CarDbContext context, IMapper mapper, IAuthorizationService authorizationService)
+        public CarCompanyService(CarDbContext context, IMapper mapper, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             this.context = context;
             this.mapper = mapper;
             this.authorizationService = authorizationService;
+            this.userContextService = userContextService;
         }
         public CarCompanyDto GetCompany(int id)
         {
@@ -55,10 +57,10 @@ namespace CarsAPI.Services
             return companiesDtos;
         }
 
-        public int NewCompany(CreateCarCompanyDto dto, int userId)
+        public int NewCompany(CreateCarCompanyDto dto)
         {
             var company = mapper.Map<CarCompany>(dto);
-            company.CreateById = userId;
+            company.CreateById = userContextService.GetUserId();
 
             context.CarCompany.Add(company);
             context.SaveChanges();
@@ -67,14 +69,14 @@ namespace CarsAPI.Services
 
         }
 
-        public bool DeletedCompany(int id, ClaimsPrincipal user)
+        public bool DeletedCompany(int id)
         {
             var deleted = context.CarCompany.FirstOrDefault(c => c.Id == id);
 
             if (deleted is null)
                 return false;
 
-            var authorizationResult = authorizationService.AuthorizeAsync(user, deleted, new ResourceOperationRequirement(ResourceOperation.Delete
+            var authorizationResult = authorizationService.AuthorizeAsync(userContextService.User, deleted, new ResourceOperationRequirement(ResourceOperation.Delete
                 )).Result;
 
             if (!authorizationResult.Succeeded)
@@ -88,14 +90,14 @@ namespace CarsAPI.Services
             return true;
         }
 
-        public bool Update(CreateCarCompanyDto dto, int id, ClaimsPrincipal user)
+        public bool Update(CreateCarCompanyDto dto, int id)
         {
             var updated = context.CarCompany.FirstOrDefault(c => c.Id == id);
 
             if (updated is null)
                 return false;
 
-            var authorizationResult = authorizationService.AuthorizeAsync(user, updated, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authorizationResult = authorizationService.AuthorizeAsync(userContextService.User, updated, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
             if (!authorizationResult.Succeeded)
             {
@@ -106,6 +108,7 @@ namespace CarsAPI.Services
             updated.Name = dto.Name;
             updated.REGON = dto.REGON;
             updated.DateOfCommencementOfActivity = dto.DateOfCommencementOfActivity;
+            updated.NIP = dto.NIP;
 
             context.SaveChanges();
 

@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using CarsAPI.Authorization;
 using CarsAPI.Entities;
+using CarsAPI.Exceptions;
 using CarsAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,11 +24,15 @@ namespace CarsAPI.Services
     {
         private readonly CarDbContext dbContext;
         private readonly IMapper mapper;
+        private readonly IUserContextService userContextService;
+        private readonly IAuthorizationService authorizationService;
 
-        public CarService(CarDbContext dbContext, IMapper mapper)
+        public CarService(CarDbContext dbContext, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+            this.userContextService = userContextService;
+            this.authorizationService = authorizationService;
         }
         public int? Create(CreateCarDto dto, int carCompanyId)
         {
@@ -35,6 +42,8 @@ namespace CarsAPI.Services
                 return null;
 
             var car = mapper.Map<Car>(dto);
+
+            car.CreateById = userContextService.GetUserId();
 
             car.CarCompanyId = carCompanyId;
 
