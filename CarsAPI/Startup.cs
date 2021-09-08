@@ -88,6 +88,7 @@ namespace CarsAPI
                 options.AddPolicy("MinimumTwoCars", builder => builder.AddRequirements(new MinimumTwoCarsRequirement(2)));
             });
             services.AddScoped<IValidator<SearchQuery>, SearchQueryValidator>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +103,12 @@ namespace CarsAPI
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cars API"); 
+            });
 
             app.UseRouting();
 
